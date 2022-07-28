@@ -42,7 +42,7 @@ jobs:
 
   push-controller:
     name: Push controller image to registry
-    needs: [build-controller, deploy]
+    needs: [build-controller]
     runs-on: ubuntu-20.04
 
     steps:
