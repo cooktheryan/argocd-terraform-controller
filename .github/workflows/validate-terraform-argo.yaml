@@ -40,52 +40,6 @@ jobs:
           name: controller
           path: /tmp/controller.tar
 
-  deploy:
-    name: Deploy Kind cluster and run tests
-    needs: [ build-controller ]
-    runs-on: ubuntu-20.04
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install the Kubectl binary
-      run: |
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        sudo install ./kubectl /usr/local/bin/
-        kubectl version --short --client
-    
-    - name: Install the Kind binary
-      run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64
-        chmod +x ./kind
-        sudo mv ./kind /usr/local/bin/kind
-        kind version
-        
-    - name: Create a Kind Cluster
-      run: kind create cluster
-
-    - name: Pull the container image from Artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: controller
-        path: /tmp
-
-    - name: Load the controller image
-      run: docker load -i /tmp/controller.tar
-
-    - name: Load the controller image into Kind
-      run: kind load docker-image ${CONTROLLER_IMAGE}
-
-    - name: Install the controller
-      run: |
-        kubectl create namespace argocd
-        kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-        make deploy
-        kubectl get events -n argocd
-        kubectl get po -A
-
-    - name: run e2e tests
-      run: make test-e2e
-
   push-controller:
     name: Push controller image to registry
     needs: [build-controller, deploy]
