@@ -50,9 +50,6 @@ jobs:
     name: Push controller image to registry
     needs: [build-controller]
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        platform: ${{ fromJson(needs.setup.outputs.dist_matrix) }}
 
     steps:
       - name: Check out code
@@ -79,4 +76,4 @@ jobs:
           file: "./Dockerfile"
           platforms: ${{ matrix.platform }}
           push: true
-          tags: "${{ env.OPERATOR_IMAGE_REPOSITORY }}:latest-${{ steps.setup-build-step.outputs.platform_os }}-${{ steps.setup-build-step.outputs.platform_arch }},${{ env.OPERATOR_IMAGE_REPOSITORY }}:${{ env.OPERATOR_VERSION }}-${{ steps.setup-build-step.outputs.platform_os }}-${{ steps.setup-build-step.outputs.platform_arch }}"
+          tags: ${{ env.CONTROLLER_IMAGE }}:latest
