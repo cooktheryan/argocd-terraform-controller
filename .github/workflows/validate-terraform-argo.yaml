@@ -76,4 +76,4 @@ jobs:
           file: "./Dockerfile"
           platforms: ${{ matrix.platform }}
           push: true
-          tags: rcook/argocd-terraform-controller:latest
+          tags: quay.io/rcook/argocd-terraform-controller:latest
