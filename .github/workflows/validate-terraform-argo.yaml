@@ -45,6 +45,6 @@ jobs:
         with:
           context: .
           file: "./Dockerfile"
-          platforms: ${{ matrix.platform }}
+          platforms: "linux/amd64,linux/arm64,linux/ppc64le,linux/s390x"
           push: true
           tags: quay.io/rcook/argocd-terraform-controller:latest
