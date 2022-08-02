@@ -18,37 +18,8 @@ env:
   CONTROLLER_IMAGE: "quay.io/rcook/argocd-terraform-controller:latest"
   
 jobs:
-  build-controller:
-    name: Build-controller
-    runs-on: ubuntu-20.04
-
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
-
-      - name: Install Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Test
-        run: make test
-
-      - name: Build controller container
-        run: make docker-build IMG=${CONTROLLER_IMAGE}
-
-      - name: Export container image
-        run: docker save -o /tmp/controller.tar ${CONTROLLER_IMAGE}
-
-      - name: Save container as artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: controller
-          path: /tmp/controller.tar
-
   push-controller:
     name: Push controller image to registry
-    needs: [build-controller]
     runs-on: ubuntu-20.04
 
     steps:
