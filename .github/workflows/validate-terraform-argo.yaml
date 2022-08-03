@@ -28,6 +28,9 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
+        
+      - name: echo
+        run: echo ${CONTROLLER_IMAGE}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
